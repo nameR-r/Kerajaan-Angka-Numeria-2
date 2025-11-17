@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerajaan Angka: Petualangan Matematika</title>
+    <!-- Konfigurasi Font (Inter) -->
+    <style> 
+        /* --- GENERAL & LAYOUT --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f8ff; /* Warna langit cerah */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 1rem; /* p-4 */
+            max-width: 1280px; /* max-w-7xl */
+            width: 100%;
+            margin: 0 auto; /* mx-auto */
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                padding: 2rem; /* md:p-8 */
+            }
+        }
+
+        /* --- HEADER --- */
+        .header {
+            background-color: #6d28d9; /* bg-purple-700 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); /* shadow-xl */
+            color: white;
+            padding: 1rem;
+        }
+        .header-content {
+            max-width: 1280px; 
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 800; /* font-extrabold */
+            letter-spacing: -0.05em; /* tracking-tight */
+        }
+        .header div {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+        }
+
+        /* --- BUTTONS & FANTASY EFFECTS --- */
+        .fantasy-button {
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 0 #4c1d95; /* Default 3D Shadow */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1.5rem; /* p-6 */
+            color: white;
+            text-align: center;
+            display: block;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+        }
+        .fantasy-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 0 #4c1d95;
+        }
+        .fantasy-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 0 #4c1d95;
+        }
+        .fantasy-button span:first-child {
+            font-size: 3rem; /* text-5xl */
+            display: block;
+            margin-bottom: 0.5rem; /* mb-2 */
+            line-height: 1;
+        }
+        .fantasy-button .title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            display: block;
+        }
+        .fantasy-button .desc {
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        /* Specific Button Colors */
+        .btn-tk {
+            background-color: #ec4899; /* bg-pink-500 */
+            box-shadow: 0 4px 0 0 #9d174d; 
+        }
+        .btn-tk:hover {
+            background-color: #db2777; 
+            box-shadow: 0 6px 0 0 #9d174d;
+        }
+        .btn-tk:active {
+            box-shadow: 0 2px 0 0 #9d174d;
+        }
+
+        /* SD Rendah (Default Green) */
+        .btn-sd-rendah {
+            background-color: #22c55e; /* bg-green-500 */
+            box-shadow: 0 4px 0 0 #15803d; 
+        }
+        .btn-sd-rendah:hover {
+            background-color: #16a34a; 
+            box-shadow: 0 6px 0 0 #15803d;
+        }
+        .btn-sd-rendah:active {
+            box-shadow: 0 2px 0 0 #15803d;
+        }
+
+        /* SD Tinggi (Default Blue) */
+        .btn-sd-tinggi {
+            background-color: #3b82f6; /* bg-blue-500 */
+            box-shadow: 0 4px 0 0 #1e40af; 
+        }
+        .btn-sd-tinggi:hover {
+            background-color: #2563eb; 
+            box-shadow: 0 6px 0 0 #1e40af;
+        }
+        .btn-sd-tinggi:active {
+            box-shadow: 0 2px 0 0 #1e40af;
+        }
+
+        /* Mode Kesulitan */
+        .difficulty-button {
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .difficulty-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .btn-mudah {
+            background-color: #4ade80; /* bg-green-300 */
+            color: #047857; /* text-green-700 */
+        }
+        .btn-sulit {
+            background-color: #fca5a5; /* bg-red-300 */
+            color: #b91c1c; /* text-red-700 */
+        }
+        
+        /* --- LEVEL SELECTOR --- */
+        .level-selector {
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .level-selector h2 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* text-gray-800 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .level-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* grid-cols-1 */
+            gap: 1.5rem; /* gap-6 */
+        }
+        @media (min-width: 640px) {
+            .level-grid {
+                grid-template-columns: repeat(2, 1fr); /* sm:grid-cols-2 */
+            }
+        }
+        @media (min-width: 1024px) {
+            .level-grid {
+                grid-template-columns: repeat(4, 1fr); /* lg:grid-cols-4 - to fit TK + 6 SD levels */
+            }
+        }
+
+        /* --- GAME AREA --- */
+        .game-area {
+            background-color: white;
+            padding: 1.5rem; /* p-6 */
+            border-radius: 1rem; /* rounded-2xl */
+            border: 4px solid #fde047; /* border-4 border-yellow-300 */
+        }
+        @media (min-width: 768px) {
+            .game-area {
+                padding: 2.5rem; /* md:p-10 */
+            }
+        }
+
+        .card-glow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn-back {
+            color: #7c3aed; /* text-purple-600 */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 1rem; /* mb-4 */
+            display: inline-flex;
+            align-items: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-back:hover {
+            color: #5b21b6; /* hover:text-purple-800 */
+        }
+        .btn-back svg {
+            height: 1.25rem; /* h-5 */
+            width: 1.25rem; /* w-5 */
+            margin-right: 0.25rem; /* mr-1 */
+        }
+
+        .game-area h3 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            color: #6d28d9; /* text-purple-700 */
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+
+        .narasi-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fffbeb; /* bg-yellow-50 */
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.75rem; /* rounded-xl */
+            margin-bottom: 1.5rem; /* mb-6 */
+            border-left: 4px solid #f59e0b; /* border-l-4 border-yellow-500 */
+            gap: 1rem;
+        }
+        @media (min-width: 768px) {
+            .narasi-box {
+                flex-direction: row;
+            }
+            .narasi-box p {
+                width: 66.666667%; /* md:w-2/3 */
+            }
+            .narasi-box .character {
+                width: 33.333333%; /* md:w-1/3 */
+            }
+        }
+        .narasi-box p {
+            font-size: 1.125rem; /* text-lg */
+            color: #4b5563; /* text-gray-700 */
+            font-weight: 500; /* font-medium */
+        }
+
+        .character {
+            font-size: 5rem;
+            line-height: 1;
+            text-align: center;
+        }
+
+        /* --- QUESTION BOX --- */
+        .question-box {
+            text-align: center;
+            padding: 2rem; /* p-8 */
+            background-color: #f3e8ff; /* bg-purple-100 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* shadow-inner */
+        }
+        .question-box p {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: #4b5563; /* text-gray-800 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        #equation-display {
+            font-size: 3.75rem; /* text-6xl */
+            font-weight: 800; /* font-extrabold */
+            color: #4c1d95; /* text-purple-900 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+
+        #visual-objects {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem; /* gap-4 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        #visual-objects > div {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem; /* gap-2 */
+            justify-content: center;
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        /* Visual styles remain the same for simple addition/counting visualization */
+
+        /* --- INPUT & SUBMIT --- */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem; /* gap-4 */
+        }
+        #answer-input {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.5rem; /* text-2xl */
+            text-align: center;
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 2px solid #a78bfa; /* border-2 border-purple-500 */
+            width: 100%;
+            max-width: 300px; /* max-w-xs */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        #answer-input:focus {
+            outline: none;
+            border-color: #6d28d9; /* focus:border-purple-700 */
+            box-shadow: 0 0 0 1px #6d28d9; /* focus:ring-1 focus:ring-purple-700 */
+        }
+        
+        .btn-submit {
+            background-color: #facc15; /* bg-yellow-400 */
+            color: #4c1d95; /* text-purple-900 */
+            font-weight: 800; /* font-extrabold */
+            font-size: 1.25rem; /* text-xl */
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            border-radius: 9999px; /* rounded-full */
+            width: 100%;
+            max-width: 300px; /* max-w-xs */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-submit:hover {
+            background-color: #fcd34d; /* hover:bg-yellow-500 */
+        }
+
+        /* --- FEEDBACK --- */
+        #feedback-message {
+            margin-top: 1.5rem; /* mt-6 */
+            text-align: center;
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            height: 2rem; /* h-8 */
+        }
+        .text-green-600 { color: #059669; }
+        .text-red-600 { color: #dc2626; }
+
+        /* --- MODAL --- */
+        #custom-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* hidden */
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 50;
+        }
+        #custom-modal.flex { display: flex; }
+        
+        #custom-modal > div {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 2rem; /* p-8 */
+            max-width: 448px; /* max-w-md */
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+            border: 4px solid #ef4444; /* Default border red */
+        }
+        #custom-modal .modal-icon {
+            font-size: 3rem; /* text-6xl */
+            display: block;
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        #custom-modal h4 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 0.75rem; /* mb-3 */
+            color: #1f2937; /* text-gray-800 */
+        }
+        #custom-modal p {
+            margin-bottom: 1.5rem; /* mb-6 */
+            color: #4b5563; /* text-gray-600 */
+        }
+        .btn-modal {
+            background-color: #dc2626; /* bg-red-600 */
+            color: white;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem; /* py-2 px-6 */
+            border-radius: 9999px; /* rounded-full */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-modal:hover {
+            background-color: #b91c1c; /* hover:bg-red-700 */
+        }
+        .btn-modal-gold {
+            background-color: #facc15;
+            color: #4c1d95;
+            transition: background-color 0.2s;
+        }
+        .btn-modal-gold:hover {
+            background-color: #fcd34d;
+        }
+
+        /* Utility for Narration */
+        .text-red-500 { color: #ef4444; }
+        .text-blue-500 { color: #3b82f6; }
+        .font-bold { font-weight: 700; }
+
+        /* Class untuk hidden/display */
+        .hidden { display: none; }
+        .flex { display: flex; }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header / Navbar Fantasi -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="font-extrabold tracking-tight">
+                ✨ Kerajaan Angka: Numeria ✨
+            </h1>
+            <div>
+                Pahlawan: <span id="pahlawan-nama">Anonim</span> | Skor Misi: <span id="pahlawan-level">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Konten Utama Aplikasi -->
+    <main class="main-content">
+
+        <!-- Area Pemilihan Jenjang -->
+        <section id="level-selector" class="level-selector">
+            <h2 class="font-bold text-gray-800 mb-6 text-center">Pilih Petualanganmu!</h2>
+            <div class="level-grid">
+                
+                <!-- TK - Pengenalan Angka & Hitungan -->
+                <button onclick="selectDifficulty('tk', 'easy')" class="fantasy-button btn-tk">
+                    <span>⭐</span>
+                    <span class="title">TK: Desa Angka Lucu</span>
+                    <span class="desc">Mengenal 1 sampai 10</span>
+                </button>
+
+                <!-- SD Kelas 1 - Penjumlahan Sederhana (Maks. 20) -->
+                <button onclick="showDifficultySelector('sd_1')" class="fantasy-button btn-sd-rendah">
+                    <span>1️⃣</span>
+                    <span class="title">SD Kelas 1: Menghitung Benda</span>
+                    <span class="desc">Penjumlahan & Pengurangan</span>
+                </button>
+
+                <!-- SD Kelas 2 - Penjumlahan & Pengurangan (Maks. 50) -->
+                <button onclick="showDifficultySelector('sd_2')" class="fantasy-button" 
+                    style="background-color: #f97316; box-shadow: 0 4px 0 0 #9a3412;">
+                    <span>2️⃣</span>
+                    <span class="title">SD Kelas 2: Keranjang Pengurangan</span>
+                    <span class="desc">Penjumlahan & Pengurangan</span>
+                </button>
+
+                <!-- SD Kelas 3 - Penjumlahan & Pengurangan (Maks. 100) -->
+                <button onclick="showDifficultySelector('sd_3')" class="fantasy-button" 
+                    style="background-color: #8b5cf6; box-shadow: 0 4px 0 0 #5b21b6;">
+                    <span>3️⃣</span>
+                    <span class="title">SD Kelas 3: Menara Angka Ratusan</span>
+                    <span class="desc">Penjumlahan & Pengurangan</span>
+                </button>
+
+                <!-- SD Kelas 4 - Perkalian -->
+                <button onclick="showDifficultySelector('sd_4')" class="fantasy-button"
+                    style="background-color: #06b6d4; box-shadow: 0 4px 0 0 #0e7490;">
+                    <span>4️⃣</span>
+                    <span class="title">SD Kelas 4: Misteri Perkalian</span>
+                    <span class="desc">Perkalian Dasar & Lanjut</span>
+                </button>
+
+                <!-- SD Kelas 5 - Bangun Datar -->
+                <button onclick="showDifficultySelector('sd_5')" class="fantasy-button btn-sd-tinggi">
+                    <span>5️⃣</span>
+                    <span class="title">SD Kelas 5: Gerbang Bangun Datar</span>
+                    <span class="desc">Keliling & Luas Persegi/PP</span>
+                </button>
+
+                <!-- SD Kelas 6 - Bangun Ruang -->
+                <button onclick="showDifficultySelector('sd_6')" class="fantasy-button" 
+                    style="background-color: #ef4444; box-shadow: 0 4px 0 0 #b91c1c;">
+                    <span>6️⃣</span>
+                    <span class="title">SD Kelas 6: Labirin Bangun Ruang</span>
+                    <span class="desc">Volume & Luas Permukaan Kubus/Balok</span>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- Area Pemilihan Kesulitan (Baru) -->
+        <section id="difficulty-selector" class="hidden game-area card-glow">
+            <button onclick="showSelector()" class="btn-back">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+                </svg>
+                Kembali ke Peta Dunia
+            </button>
+
+            <h3 id="difficulty-title" class="text-center">Pilih Mode Kesulitan: SD Kelas X</h3>
+            <p class="text-center text-gray-600 mb-8">Pilih tantangan yang kamu sukai untuk memulai misi.</p>
+            
+            <div class="flex flex-col md:flex-row justify-center gap-6">
+                <button onclick="selectDifficulty(currentLevel, 'easy')" class="difficulty-button btn-mudah">
+                    <span class="title">Mode Mudah (Eksplorasi)</span>
+                    <span class="desc block text-sm font-normal mt-1">Angka kecil, fokus pada konsep dasar.</span>
+                </button>
+                <button onclick="selectDifficulty(currentLevel, 'hard')" class="difficulty-button btn-sulit">
+                    <span class="title">Mode Sulit (Tantangan)</span>
+                    <span class="desc block text-sm font-normal mt-1">Angka lebih besar, memerlukan perhitungan yang lebih mendalam.</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Area Game/Pembelajaran Interaktif -->
+        <section id="game-area" class="hidden game-area card-glow">
+            <!-- Tombol Kembali -->
+            <button onclick="showSelector()" class="btn-back">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.707-10.293a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L9.414 11H13a1 1 0 100-2H9.414l1.293-1.293z" clip-rule="evenodd" />
+                </svg>
+                Kembali ke Peta Dunia
+            </button>
+            
+            <h3 id="game-title" class="text-center"></h3>
+            
+            <div id="game-content">
+                <!-- Konten Game atau Placeholder akan dimasukkan di sini oleh JS -->
+                <div class="question-box">
+                    <p class="font-semibold text-gray-800 mb-4">Misi Saat Ini: Selesaikan <span id="target-score-display">5</span> Soal!</p>
+                    <div id="equation-display" class="text-6xl font-extrabold text-purple-900 mb-8"></div>
+                    <div id="visual-objects"></div>
+                    <div class="input-group">
+                        <input type="number" id="answer-input" placeholder="Tulis jawabanmu di sini..." class="text-center" />
+                        <button onclick="checkAnswer()" class="fantasy-button btn-submit">
+                            Kirim Jawaban!
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pesan / Feedback Area -->
+            <div id="feedback-message" class="mt-6 text-center text-xl font-bold h-8">
+                <!-- Pesan Berhasil/Gagal akan muncul di sini -->
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Modal Khusus (Menggantikan alert()) -->
+    <div id="custom-modal">
+        <div class="bg-white">
+            <span id="modal-icon" class="modal-icon"></span>
+            <h4 id="modal-title"></h4>
+            <p id="modal-body"></p>
+            <button onclick="closeModal()" class="fantasy-button btn-modal">Tutup</button>
+        </div>
+    </div>
+
+    <!-- Script Logika Game -->
+    <script>
+        // Variabel global yang diperlukan
+        let currentLevel = null;
+        let currentDifficulty = null; // 'easy' atau 'hard'
+        let correctAnswer = 0;
+        let score = 0;
+        const TARGET_SCORE = 5; 
+
+        // --- Logika Modal Kustom (Pengganti alert) ---
+        function showModal(title, body, type) {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalBox = modal.querySelector('div');
+            const modalButton = modal.querySelector('button');
+
+            modalTitle.textContent = title;
+            modalBody.textContent = body;
+
+            // Reset classes
+            modalButton.classList.remove('btn-modal-gold');
+            modalButton.classList.add('btn-modal');
+            modalButton.style.backgroundColor = '';
+
+            // Set icon dan warna border berdasarkan tipe
+            if (type === 'red') {
+                modalIcon.textContent = '⛔';
+                modalBox.style.borderColor = '#ef4444';
+                modalButton.style.backgroundColor = '#dc2626';
+            } else if (type === 'gold') {
+                modalIcon.textContent = '🌟';
+                modalBox.style.borderColor = '#fde047';
+                modalButton.classList.add('btn-modal-gold');
+            } else {
+                modalIcon.textContent = 'ℹ️';
+                modalBox.style.borderColor = '#3b82f6';
+                modalButton.style.backgroundColor = '#3b82f6';
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+
+        // --- Konfigurasi Awal (Inisialisasi) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pahlawan-nama').textContent = "Pahlawan Cilik";
+            showSelector();
+        });
+
+        // Fungsi untuk menampilkan area pemilihan jenjang
+        function showSelector() {
+            document.getElementById('level-selector').classList.remove('hidden');
+            document.getElementById('difficulty-selector').classList.add('hidden');
+            document.getElementById('game-area').classList.add('hidden');
+        }
+
+        // Fungsi untuk menampilkan pemilih kesulitan (khusus SD)
+        function showDifficultySelector(level) {
+            currentLevel = level;
+            const levelTitles = {
+                'sd_1': "SD Kelas 1: Menghitung Benda",
+                'sd_2': "SD Kelas 2: Keranjang Pengurangan",
+                'sd_3': "SD Kelas 3: Menara Angka Ratusan",
+                'sd_4': "SD Kelas 4: Misteri Perkalian",
+                'sd_5': "SD Kelas 5: Gerbang Bangun Datar",
+                'sd_6': "SD Kelas 6: Labirin Bangun Ruang",
+            };
+
+            document.getElementById('difficulty-title').textContent = `Pilih Mode Kesulitan: ${levelTitles[level]}`;
+            document.getElementById('level-selector').classList.add('hidden');
+            document.getElementById('game-area').classList.add('hidden');
+            document.getElementById('difficulty-selector').classList.remove('hidden');
+        }
+
+        // Fungsi untuk memilih kesulitan dan memuat level
+        function selectDifficulty(level, difficulty) {
+            currentLevel = level;
+            currentDifficulty = difficulty;
+            score = 0;
+            document.getElementById('pahlawan-level').textContent = score;
+
+            document.getElementById('difficulty-selector').classList.add('hidden');
+            document.getElementById('level-selector').classList.add('hidden');
+            document.getElementById('game-area').classList.remove('hidden');
+            
+            loadLevel(level, difficulty);
+        }
+
+
+        // Helper function to set up common game UI elements structure
+        function setupGameUIStructure(title, difficulty) {
+            document.getElementById('game-title').textContent = `${title} (${difficulty === 'easy' ? 'Mudah' : 'Sulit'})`;
+            
+            // Pastikan elemen-elemen ini ada sebelum diset ulang
+            const gameContent = document.getElementById('game-content');
+            if (gameContent) {
+                 gameContent.innerHTML = `
+                    <div class="narasi-box">
+                        <p id="narasi-panduan"></p>
+                        <span class="character">🧙‍♂️</span>
+                    </div>
+                    <div class="question-box">
+                        <p class="font-semibold text-gray-800 mb-4">Misi Saat Ini: Selesaikan <span id="target-score-display">${TARGET_SCORE}</span> Soal!</p>
+                        <div id="equation-display" class="text-6xl font-extrabold text-purple-900 mb-8"></div>
+                        <div id="visual-objects"></div>
+                        <div class="input-group">
+                            <input type="number" id="answer-input" placeholder="Tulis jawabanmu di sini..." class="text-center" />
+                            <button onclick="checkAnswer()" class="fantasy-button btn-submit">
+                                Kirim Jawaban!
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            const answerInput = document.getElementById('answer-input');
+            if (answerInput) answerInput.value = '';
+            const feedbackMessage = document.getElementById('feedback-message');
+            if (feedbackMessage) feedbackMessage.textContent = '';
+        }
+
+        // Fungsi untuk memuat level pembelajaran tertentu
+        function loadLevel(level, difficulty = 'easy') {
+            const levelTitles = {
+                'tk': "TK: Desa Angka Lucu (Hitungan 1-9)",
+                'sd_1': "SD Kelas 1: Menghitung Benda",
+                'sd_2': "SD Kelas 2: Keranjang Pengurangan",
+                'sd_3': "SD Kelas 3: Menara Angka Ratusan",
+                'sd_4': "SD Kelas 4: Misteri Perkalian", 
+                'sd_5': "SD Kelas 5: Gerbang Bangun Datar", 
+                'sd_6': "SD Kelas 6: Labirin Bangun Ruang", 
+            };
+
+            const title = levelTitles[level];
+            
+            if (['tk', 'sd_1', 'sd_2', 'sd_3', 'sd_4', 'sd_5', 'sd_6'].includes(level)) {
+                setupGameUIStructure(title, difficulty);
+                generateQuestion(level, difficulty);
+            } else {
+                // Handle TK directly without difficulty selector, always 'easy'
+                setupGameUIStructure(title, 'Mudah'); 
+                generateQuestion(level, 'easy');
+            }
+        }
+
+        // Helper untuk membatasi angka acak
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // --- Logika Pembuatan Soal berdasarkan Level dan Kesulitan ---
+
+        // Fungsi untuk menampilkan objek visual (kristal/batu ajaib)
+        function renderVisualObjects(n1, n2, icon1 = '🔴', icon2 = '🔵') {
+            const visualContainer = document.getElementById('visual-objects');
+            if (!visualContainer) return;
+            visualContainer.innerHTML = '';
+            
+            // Objek pertama
+            const div1 = document.createElement('div');
+            div1.className = 'flex-wrap gap-2 justify-center p-3 w-full';
+            div1.style.display = 'flex';
+            div1.style.borderRadius = '0.5rem';
+            div1.style.backgroundColor = (icon1 === '💎') ? '#f3e8ff' : '#fee2e2'; 
+            div1.innerHTML += `<p class="font-bold text-lg w-full" style="color: ${icon1 === '💎' ? '#6d28d9' : '#b91c1c'};">(${n1} Objek):</p>`;
+            for (let i = 0; i < n1; i++) {
+                div1.innerHTML += `<span style="font-size: 1.875rem;" title="Objek 1">${icon1}</span>`;
+            }
+            visualContainer.appendChild(div1);
+
+            if (n2 > 0) {
+                // Tanda tambah
+                visualContainer.innerHTML += '<span style="font-size: 2.25rem; color: #4b5563; font-weight: 700; margin: 0 1rem;">+</span>';
+
+                // Objek kedua
+                const div2 = document.createElement('div');
+                div2.className = 'flex-wrap gap-2 justify-center p-3 w-full';
+                div2.style.display = 'flex';
+                div2.style.borderRadius = '0.5rem';
+                div2.style.backgroundColor = '#eff6ff';
+                div2.innerHTML += `<p class="font-bold text-lg w-full" style="color: #1d4ed8;">(${n2} Objek):</p>`;
+                for (let i = 0; i < n2; i++) {
+                    div2.innerHTML += `<span style="font-size: 1.875rem;" title="Objek 2">${icon2}</span>`;
+                }
+                visualContainer.appendChild(div2);
+            }
+        }
+
+        // Fungsi utama untuk menghasilkan soal berdasarkan level dan kesulitan
+        function generateQuestion(level, difficulty) {
+            let num1, num2, operator, max;
+            const equationDisplay = document.getElementById('equation-display');
+            const visualContainer = document.getElementById('visual-objects');
+            const narasiPanduan = document.getElementById('narasi-panduan');
+
+            if (!equationDisplay || !visualContainer || !narasiPanduan) {
+                console.error("Game UI elements missing.");
+                return;
+            }
+
+            visualContainer.innerHTML = ''; // Hapus visualisasi lama
+            
+            // Logic berdasarkan level
+            if (level === 'tk') {
+                // TK: Counting (1-9) - No difficulty scaling needed here.
+                const total = getRandomInt(1, 9); 
+                correctAnswer = total;
+                narasiPanduan.innerHTML = '⭐ <span class="font-bold">Peri Angka</span> berkata: "Pahlawan kecil! Tugasmu adalah menghitung dengan cermat jumlah Permata Ajaib 💎 yang muncul!"';
+                equationDisplay.textContent = `Hitung semua Permata 💎 = ?`;
+                renderVisualObjects(total, 0, '💎');
+
+            } else if (level === 'sd_1') {
+                // SD 1: Simple Addition/Subtraction
+                max = difficulty === 'easy' ? 20 : 50; 
+                operator = Math.random() < 0.7 ? '+' : '-'; // Lebih banyak penjumlahan
+
+                if (operator === '+') {
+                    num1 = getRandomInt(1, max / 2);
+                    num2 = getRandomInt(1, max - num1);
+                    correctAnswer = num1 + num2;
+                } else { // Pengurangan
+                    num1 = getRandomInt(10, max);
+                    num2 = getRandomInt(1, num1 - 1);
+                    correctAnswer = num1 - num2;
+                }
+
+                narasiPanduan.innerHTML = `🧙‍♂️ <span class="font-bold">Mage Multi</span> berkata: "Kelas 1, Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! Hitung total atau sisanya. Fokus pada Kristal <span class="text-red-500 font-bold">Merah</span> dan <span class="text-blue-500 font-bold">Biru</span>!"`;
+                equationDisplay.textContent = `${num1} ${operator} ${num2} = ?`;
+                
+                // Visualisasi hanya untuk Mode Mudah, atau jika hasilnya kecil
+                if (difficulty === 'easy' || (operator === '+' && num1 + num2 <= 20)) {
+                    renderVisualObjects(num1, operator === '+' ? num2 : 0, '🔴', '🔵');
+                } else {
+                    visualContainer.innerHTML = '<p class="text-lg text-gray-500 font-medium">Hitung cepat di pikiranmu, Pahlawan!</p>';
+                }
+
+
+            } else if (level === 'sd_2' || level === 'sd_3') {
+                // SD 2 & 3: Addition/Subtraction up to 50/100
+                max = (level === 'sd_2') ? 50 : 100;
+                let max_op = difficulty === 'easy' ? max : (max * 2); // Maksimal hasil/angka (Sulit: sampai 200 untuk SD3)
+                
+                operator = Math.random() < 0.5 ? '+' : '-';
+
+                if (operator === '+') {
+                    // Penjumlahan
+                    let limit = Math.min(max_op - 1, level === 'sd_3' ? 200 : 100);
+                    num1 = getRandomInt(max / 4, limit / 2); 
+                    num2 = getRandomInt(max / 4, limit - num1);
+                    correctAnswer = num1 + num2;
+                } else { 
+                    // Pengurangan
+                    num1 = getRandomInt(max / 2 + 10, max_op); 
+                    num2 = getRandomInt(max / 5, num1 - 10); // Pastikan hasil tidak terlalu kecil
+                    correctAnswer = num1 - num2;
+                }
+                
+                narasiPanduan.innerHTML = `🧙‍♂️ <span class="font-bold">Mage Multi</span> berkata: "Tingkat ${level.slice(3)}, Mode ${difficulty === 'easy' ? 'Eksplorasi' : 'Tantangan'}! Kumpulkan dan kurangi kristalmu!"`;
+                equationDisplay.textContent = `${num1} ${operator} ${num2} = ?`;
+                visualContainer.innerHTML = '<p class="text-lg text-gray-500 font-medium">Hitung cepat di pikiranmu, Pahlawan!</p>';
+
+            } else if (level === 'sd_4') {
+                // SD 4: Perkalian
+                num1 = getRandomInt(2, difficulty === 'easy' ? 10 : 15);
+                num2 = getRandomInt(2, difficulty === 'easy' ? 10 : 15); 
+                
+                if (difficulty === 'hard') {
+                     // Sulit: Bisa juga 1 angka dikali 2 angka (contoh 8 x 15)
+                     if (Math.random() < 0.5) {
+                        num1 = getRandomInt(2, 9);
+                        num2 = getRandomInt(11, 25);
+                     }
+                }
+
+                operator = 'x';
+                correctAnswer = num1 * num2;
+                narasiPanduan.innerHTML = `🌟 <span class="font-bold">Ratu Perkalian</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! Pecahkan misteri kotak rahasia: ${num1} dikali ${num2}?"`;
+                equationDisplay.textContent = `${num1} ${operator} ${num2} = ?`;
+                visualContainer.innerHTML = '<p class="text-lg text-gray-500 font-medium">Ini adalah Misi Perkalian, gunakan tabel ajaibmu!</p>';
+
+            } else if (level === 'sd_5') {
+                // SD 5: Bangun Datar (Keliling & Luas)
+                const type = Math.random() < 0.5 ? 'Keliling' : 'Luas';
+                const shape = Math.random() < 0.5 ? 'Persegi' : 'Persegi Panjang';
+                
+                let a, b; // side a (sisi/panjang), side b (lebar)
+                let max_dim = difficulty === 'easy' ? 12 : 20;
+
+                if (shape === 'Persegi') {
+                    a = getRandomInt(4, max_dim); 
+                    
+                    if (type === 'Keliling') {
+                        correctAnswer = 4 * a;
+                        narasiPanduan.innerHTML = `📐 <span class="font-bold">Tuan Geometri</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! Sebuah <span class="font-bold text-blue-500">Persegi</span> bersisi <span class="font-bold">${a} cm</span>. Berapa <span class="font-bold text-red-500">Kelilingnya</span>?"`;
+                        equationDisplay.textContent = `Keliling Persegi (s = ${a}) = ?`;
+                    } else { // Luas
+                        correctAnswer = a * a;
+                        narasiPanduan.innerHTML = `📐 <span class="font-bold">Tuan Geometri</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! Sebuah <span class="font-bold text-blue-500">Persegi</span> bersisi <span class="font-bold">${a} cm</span>. Berapa <span class="font-bold text-red-500">Luasnya</span>?"`;
+                        equationDisplay.textContent = `Luas Persegi (s = ${a}) = ?`;
+                    }
+                } else { // Persegi Panjang
+                    a = getRandomInt(5, max_dim); // Panjang 
+                    b = getRandomInt(2, Math.floor(a / 2)); // Lebar
+                    
+                    if (type === 'Keliling') {
+                        correctAnswer = 2 * (a + b);
+                        narasiPanduan.innerHTML = `📐 <span class="font-bold">Tuan Geometri</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! Sebuah <span class="font-bold text-blue-500">PP</span>: P=${a} cm, L=${b} cm. Berapa <span class="font-bold text-red-500">Kelilingnya</span>?"`;
+                        equationDisplay.textContent = `Keliling Persegi Panjang (P=${a}, L=${b}) = ?`;
+                    } else { // Luas
+                        correctAnswer = a * b;
+                        narasiPanduan.innerHTML = `📐 <span class="font-bold">Tuan Geometri</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! Sebuah <span class="font-bold text-blue-500">PP</span>: P=${a} cm, L=${b} cm. Berapa <span class="font-bold text-red-500">Luasnya</span>?"`;
+                        equationDisplay.textContent = `Luas Persegi Panjang (P=${a}, L=${b}) = ?`;
+                    }
+                }
+                visualContainer.innerHTML = '<p class="text-lg text-gray-500 font-medium">Jawab hanya angkanya. Ingat rumus bangun datar!</p>';
+
+            } else if (level === 'sd_6') {
+                // SD 6: Bangun Ruang (Volume & Luas Permukaan)
+                const type = Math.random() < 0.5 ? 'Volume' : 'Luas Permukaan';
+                const shape = Math.random() < 0.5 ? 'Kubus' : 'Balok';
+                
+                let p, l, t, s; // panjang, lebar, tinggi, sisi
+                let max_s = difficulty === 'easy' ? 6 : 10;
+                let max_dim_balok = difficulty === 'easy' ? 8 : 15;
+                
+                if (shape === 'Kubus') {
+                    s = getRandomInt(3, max_s); 
+                    
+                    if (type === 'Volume') {
+                        correctAnswer = s * s * s;
+                        narasiPanduan.innerHTML = `🧊 <span class="font-bold">Pangeran Ruang</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! <span class="font-bold text-blue-500">Kubus</span> bersisi <span class="font-bold">${s} cm</span>. Berapa <span class="font-bold text-red-500">Volumenya</span>?"`;
+                        equationDisplay.textContent = `Volume Kubus (s = ${s}) = ?`;
+                    } else { // Luas Permukaan
+                        correctAnswer = 6 * s * s;
+                        narasiPanduan.innerHTML = `🧊 <span class="font-bold">Pangeran Ruang</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! <span class="font-bold text-blue-500">Kubus</span> bersisi <span class="font-bold">${s} cm</span>. Berapa <span class="font-bold text-red-500">Luas Permukaan</span>-nya?"`;
+                        equationDisplay.textContent = `Luas Permukaan Kubus (s = ${s}) = ?`;
+                    }
+                } else { // Balok
+                    p = getRandomInt(4, max_dim_balok); 
+                    l = getRandomInt(2, Math.floor(p * 0.75)); 
+                    t = getRandomInt(2, Math.floor(l * 1.5)); 
+                    
+                    if (type === 'Volume') {
+                        correctAnswer = p * l * t;
+                        narasiPanduan.innerHTML = `📦 <span class="font-bold">Pangeran Ruang</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! <span class="font-bold text-blue-500">Balok</span>: P=${p}, L=${l}, T=${t}. Berapa <span class="font-bold text-red-500">Volumenya</span>?"`;
+                        equationDisplay.textContent = `Volume Balok (P=${p}, L=${l}, T=${t}) = ?`;
+                    } else { // Luas Permukaan
+                        correctAnswer = 2 * (p * l + p * t + l * t);
+                        narasiPanduan.innerHTML = `📦 <span class="font-bold">Pangeran Ruang</span> berkata: "Level ${difficulty === 'easy' ? 'Mudah' : 'Sulit'}! <span class="font-bold text-blue-500">Balok</span>: P=${p}, L=${l}, T=${t}. Berapa <span class="font-bold text-red-500">Luas Permukaan</span>-nya?"`;
+                        equationDisplay.textContent = `Luas Permukaan Balok (P=${p}, L=${l}, T=${t}) = ?`;
+                    }
+                }
+                visualContainer.innerHTML = '<p class="text-lg text-gray-500 font-medium">Jawab hanya angkanya. Bayangkan bangun ruangnya!</p>';
+
+            } else {
+                // Fallback for non-implemented levels (shouldn't happen)
+                const message = "Misi ini masih dalam pengembangan.";
+                document.getElementById('game-content').innerHTML = `
+                    <div class="text-center p-8" style="background-color: #eff6ff; border-radius: 0.75rem;">
+                        <span class="character">🚧</span>
+                        <p class="text-xl mt-4" style="font-size: 1.25rem; color: #3b82f6;">
+                        Selamat datang di Misi Kelas ${level.slice(3)}!
+                        <br><br>
+                        ${message} Kembali ke Peta Dunia untuk mencoba Misi yang sudah tersedia.
+                        </p>
+                    </div>
+                `;
+                document.getElementById('answer-input').value = '';
+                document.getElementById('feedback-message').textContent = '';
+                return;
+            }
+
+            document.getElementById('answer-input').value = '';
+            document.getElementById('feedback-message').textContent = '';
+        }
+
+        // Fungsi untuk memeriksa jawaban pengguna
+        function checkAnswer() {
+            if (!currentLevel) {
+                showModal('🚫 Level Belum Dipilih!', 'Pilih salah satu Misi yang tersedia!', 'red');
+                return;
+            }
+
+            const inputElement = document.getElementById('answer-input');
+            const userAnswer = parseInt(inputElement.value, 10);
+            const feedback = document.getElementById('feedback-message');
+            
+            if (isNaN(userAnswer)) {
+                showModal('🚫 Input Kosong!', 'Masukkan angka jawaban sebelum menekan tombol kirim.', 'red');
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                score += 1;
+                document.getElementById('pahlawan-level').textContent = score;
+                feedback.innerHTML = '<span class="text-green-600">🎉 Benar! Kristal Ajaib Terselamatkan!</span>';
+                
+                // Berikan jeda sejenak sebelum soal baru
+                setTimeout(() => {
+                    if (score < TARGET_SCORE) {
+                        generateQuestion(currentLevel, currentDifficulty);
+                    } else {
+                        showModal('🏆 Selamat, Pahlawan!', `Kamu telah menyelesaikan Misi ${TARGET_SCORE} soal di level ${currentLevel.toUpperCase()} (${currentDifficulty === 'easy' ? 'Mudah' : 'Sulit'})! Kamu mendapatkan lencana Emas!`, 'gold');
+                        showSelector(); // Kembali ke pemilihan level
+                    }
+                }, 1500);
+                
+            } else {
+                feedback.innerHTML = '<span class="text-red-600">❌ Salah! Coba Hitung Lagi!</span>';
+            }
+        }
+
+    </script>
+</body>
+</html>
